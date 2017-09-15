@@ -1,5 +1,4 @@
-require('./utils/strophe.js');
-var WebIM = require('./utils/WebIM.js').default;
+require('./js/kefu/app/modules/sdk-api.js');
 
 //app.js   
 App({
