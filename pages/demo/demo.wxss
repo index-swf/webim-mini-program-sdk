@@ -1,0 +1,15 @@
+.main {
+  margin: 50px 20px;
+}
+.main text {
+  display: block;
+  margin: 20px 0;
+}
+.main button {
+  margin: 5px 0;
+}
+.main input {
+  border-bottom: 1px solid lightgrey;
+  height: 50px;
+  padding: 0 10px;
+}
