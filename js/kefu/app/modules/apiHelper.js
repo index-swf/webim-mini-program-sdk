@@ -124,7 +124,7 @@ function getProjectId(){
 				api("getProject", {
 					tenantId: config.tenantId,
 					"easemob-target-username": config.toUser,
-					"easemob-appkey": config.appKey.replace("#", "%23"),
+					"easemob-appkey": config.appKey,
 					"easemob-username": config.user.username,
 					headers: { Authorization: "Easemob IM " + token }
 				}, function(msg){
@@ -526,7 +526,7 @@ function reportVisitorAttributes(sessionId){
 				imServiceNumber: config.toUser,
 				sessionId: sessionId,
 				userName: config.user.username,
-				referer: document.referrer,
+        referer: "https://servicewechat.com/touristappid/devtools/page-frame.html",
 				token: token
 			}, function(){
 				resolve();
@@ -974,93 +974,6 @@ function getAppraiseTags(evaluateId){
 	});
 }
 
-function getWechatComponentId(){
-	return new Promise(function(resolve, reject){
-		emajax({
-			url: "/v1/weixin/admin/appid",
-			type: "GET",
-			success: function(id){
-				if(id){
-					resolve(id);
-				}
-				else{
-					reject(new Error("unexpected response value."));
-				}
-			},
-			error: function(err){
-				reject(err);
-			}
-		});
-	});
-}
-
-function getWechatProfile(tenantId, appId, code){
-	return new Promise(function(resolve, reject){
-		emajax({
-			url: "/v1/weixin/sns/userinfo/" + appId + "/" + code + "?tenantId=" + tenantId,
-			type: "GET",
-			success: function(resp){
-				var parsed;
-
-				try{
-					parsed = JSON.parse(resp);
-				}
-				catch(e){}
-
-				if(parsed){
-					resolve(parsed);
-				}
-				else{
-					reject(new Error("unexpected response value."));
-				}
-			},
-			error: function(err){
-				reject(err);
-			}
-		});
-	});
-}
-
-function createWechatImUser(openId){
-	return new Promise(function(resolve, reject){
-		emajax({
-			url: "/v1/webimplugin/visitors/wechat/"
-				+ [
-				config.tenantId,
-				config.orgName,
-				config.appName,
-				config.toUser,
-				openId,
-			].join("_")
-				+ "?tenantId=" + config.tenantId,
-			data: {
-				orgName: config.orgName,
-				appName: config.appName,
-				imServiceNumber: config.toUser
-			},
-			type: "POST",
-			success: function(resp){
-				var parsed;
-
-				try{
-					parsed = JSON.parse(resp);
-				}
-				catch(e){}
-
-				if((parsed && parsed.status) === "OK"){
-					resolve(parsed.entity);
-				}
-				else{
-					reject();
-				}
-			},
-			error: function(err){
-				reject(err);
-			}
-		});
-	});
-}
-
 module.exports = {
 	getCurrentServiceSession: getCurrentServiceSession,
 	getToken: getToken,
@@ -1102,9 +1015,6 @@ module.exports = {
 	getLatestMarketingTask: getLatestMarketingTask,
 	getEvaluationDegrees: getEvaluationDegrees,
 	getAppraiseTags: getAppraiseTags,
-	getWechatComponentId: getWechatComponentId,
-	getWechatProfile: getWechatProfile,
-	createWechatImUser: createWechatImUser,
 
 	init: function(cfg){
 		config = cfg;

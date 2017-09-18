@@ -913,7 +913,7 @@ function _detectUploadImgMsgByApi(id, file){
 	ackTimerDict.set(
 		id,
 		setTimeout(function(){
-			_uploadImgMsgChannle(id, file);
+			// _uploadImgMsgChannle(id, file);
 		}, _const.FIRST_CHANNEL_IMG_MESSAGE_TIMEOUT)
 	);
 }

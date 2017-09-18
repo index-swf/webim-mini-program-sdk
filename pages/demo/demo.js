@@ -26,6 +26,8 @@ Page({
     sessionHandler = KefuWebIM.init({
       // 初始化配置
       tenantId: "22961",
+      imUsername: "webim-visitor-X27E2MY3B3XG3YKBXG3W",
+      // imPassword: "B9HE7CJFH8",
     }, {
         // 指定callback
         onMessageReceived: function (message) {
@@ -112,15 +114,55 @@ Page({
       });
   },
   createTicket: function () {
-    console.log("create ticket.");
+    if (!sessionHandler) {
+      throw new Error("kefu-webim-sdk must be initialized first.");
+    }
+
+    sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.CREATE_TICKET, {
+      name: "张三",
+      mail: "zhangsan@easemob.com",
+      phone: "18612345678",
+      content: "我的订单号 12345678 需要退款。",
+    }).then(function () {
+      console.log("the ticket was created successfully.");
+    }, function () {
+      console.error("the ticket failed to submit.");
+    });
   },
   transferToManual: function () {
-    console.log("transfer to manual.");
+    if (!sessionHandler) {
+      throw new Error("kefu-webim-sdk must be initialized first.");
+    }
+
+    sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.TRANSFER_TO_MANUAL);
   },
   sendTextMessage: function () {
-    console.log("send text message: ", textMessage);
+    var message;
+
+    if (!sessionHandler) {
+      throw new Error("kefu-webim-sdk must be initialized first.");
+    }
+
+    message = {
+      type: KefuWebIM.sdkConst.MESSAGE_TYPE.TEXT,
+      content: textMessage,
+    };
+
+    sessionHandler.sendMessage(message).then(function () {
+      console.log("the text message was sent successfully.");
+    }, function () {
+      console.error("the message failed to send.");
+    });
   },
   callMenu: function () {
-    console.log("call menu: ", menuId);
+    if (!menuId) {
+      throw new Error("invalid menuId: ", menuId);
+    }
+
+    if (!sessionHandler) {
+      throw new Error("kefu-webim-sdk must be initialized first.");
+    }
+
+    sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.CALL_ROBOT_MENU, menuId);
   },
 });

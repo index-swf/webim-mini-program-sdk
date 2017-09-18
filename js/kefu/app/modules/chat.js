@@ -53,7 +53,6 @@ function _initOfficialAccount(){
 
 			if(!profile.ctaEnable){
 				profile.currentOfficialAccount = profile.systemOfficialAccount;
-				profile.systemOfficialAccount.messageView.show();
 			}
 
 			eventListener.excuteCallbacks(_const.SYSTEM_EVENT.OFFICIAL_ACCOUNT_LIST_GOT, []);
