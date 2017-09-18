@@ -1,6 +1,4 @@
 
-var _isMobile = /mobile/i.test(navigator.userAgent);
-// var _isIE8 = /Trident\/4\.0/.test(navigator.userAgent);
 
 function _isNodeList(nodes){
 	var stringRepr = Object.prototype.toString.call(nodes);
@@ -99,13 +97,7 @@ function _appendHtmlToElement(element, html){
 }
 
 module.exports = {
-	isTop: window.top === window.self,
 	isNodeList: _isNodeList,
-	isAndroid: /android/i.test(navigator.userAgent),
-	isQQBrowser: /MQQBrowser/i.test(navigator.userAgent),
-	isIOS: /(iPad|iPhone|iPod)/i.test(navigator.userAgent),
-	isMobile: _isMobile,
-	click: _isMobile && ("ontouchstart" in window) ? "touchstart" : "click",
 	isBrowserMinimized: function(){
 		return document.visibilityState === "hidden" || document.hidden;
 	},

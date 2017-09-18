@@ -3,7 +3,8 @@
 import Strophe from 'strophe.js'
 import websdk from 'sdk/index'
 import xmldom from 'xmldom/dom-parser'
-import config from 'WebIMConfig'
+import config from 'kefu/app/sdk/webim.config'
+// import config from 'WebIMConfig'
 
 console.group = console.group || {}
 console.groupEnd = console.groupEnd || {}

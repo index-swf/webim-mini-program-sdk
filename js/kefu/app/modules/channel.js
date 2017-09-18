@@ -1,4 +1,4 @@
-var WebIM = require("easemob-websdk");
+var WebIM = require("../../../WebIM").default;
 var utils = require("../../common/utils");
 var _const = require("../../common/const");
 var Dict = require("./tools/Dict");
@@ -7,8 +7,9 @@ var profile = require("./tools/profile");
 var tools = require("./tools/tools");
 var eventListener = require("./tools/eventListener");
 var apiHelper = require("./apiHelper");
-var moment = require("moment");
+var moment = require("../lib/moment");
 var sdkConst = require("./sdkConst");
+var _ = require("../lib/underscore");
 
 var receiveMsgTimer;
 // todo: use profile.token instead
@@ -30,7 +31,7 @@ var _open = tools.retryThrottle(function(){
 	var op = {
 		user: config.user.username,
 		appKey: config.appKey,
-		apiUrl: location.protocol + "//" + config.restServer
+		apiUrl: "https" + "//" + config.restServer
 	};
 
 	if(config.user.token){
@@ -305,7 +306,7 @@ function _sendImg(fileMsg, callbacks){
 	var msg = new WebIM.message.img(id);
 
 	msg.set({
-		apiUrl: location.protocol + "//" + config.restServer,
+		apiUrl: "https" + "//" + config.restServer,
 		file: fileMsg,
 		accessToken: token,
 		to: config.toUser,
@@ -338,7 +339,7 @@ function _sendFile(fileMsg, callbacks){
 	var msg = new WebIM.message.file(id);
 
 	msg.set({
-		apiUrl: location.protocol + "//" + config.restServer,
+		apiUrl: "https" + "//" + config.restServer,
 		file: fileMsg,
 		to: config.toUser,
 		success: callbacks.success,
@@ -644,7 +645,7 @@ function _transformMessageFormat(element){
 
 	// 给图片消息或附件消息的url拼上hostname
 	if(url && !/^https?/.test(url)){
-		url = location.protocol + config.domain + url;
+		url = "https" + config.domain + url;
 	}
 
 	return {

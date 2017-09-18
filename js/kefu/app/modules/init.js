@@ -1,8 +1,7 @@
 require("../lib/es6-promise").polyfill();
 require("../../common/polyfill");
-require("../lib/modernizr");
 require("../sdk/webim.config");
-require("underscore");
+var _ = require("../lib/underscore");
 
 var utils = require("../../common/utils");
 var apiHelper = require("./apiHelper");
@@ -73,20 +72,7 @@ function _init(option, callbacks){
 	});
 
 
-	initCrossOriginIframe();
-}
-
-function initCrossOriginIframe(){
-	var iframe = document.createElement("iframe");
-	iframe.id = "cross-origin-iframe";
-	iframe.style.display = "none";
-	document.body.appendChild(iframe);
-
-	iframe.src = location.protocol + "//" + config.domain + "/webim/transfer.html?v=kefu-webim-sdk";
-	utils.on(iframe, "load", function(){
-		apiHelper.initApiTransfer();
-		handleMsgData();
-	});
+  handleMsgData();
 }
 
 function handleMsgData(){

@@ -1,7 +1,8 @@
 var utils = require("../../common/utils");
 var _const = require("../../common/const");
 var emajax = require("../../common/ajax");
-var Transfer = require("../../common/transfer");
+var api = require("../../transfer/api");
+var _ = require("../lib/underscore");
 
 // 以下调用会缓存参数
 // getVisitorId
@@ -12,57 +13,6 @@ var config;
 var cache = {
 	appraiseTags: {}
 };
-var cachedApiCallbackTable = {};
-var apiTransfer;
-
-function initApiTransfer(){
-	apiTransfer = new Transfer("cross-origin-iframe", "data", true);
-
-	apiTransfer.listen(function(msg){
-		var apiName = msg.call;
-		var timestamp = msg.timespan;
-		var isSuccess = msg.status === 0;
-		var callbacks;
-		var successCallback;
-		var errorCallback;
-
-		if(cachedApiCallbackTable[apiName] && cachedApiCallbackTable[apiName][timestamp]){
-
-			callbacks = cachedApiCallbackTable[apiName][timestamp];
-			delete cachedApiCallbackTable[apiName][timestamp];
-
-			successCallback = callbacks.success;
-			errorCallback = callbacks.error;
-
-			if(isSuccess){
-				typeof successCallback === "function" && successCallback(msg);
-			}
-			else{
-				typeof errorCallback === "function" && errorCallback(msg);
-			}
-		}
-	}, ["api"]);
-}
-
-function api(apiName, data, success, error){
-	var uuid = utils.uuid();
-
-	// cache
-	cachedApiCallbackTable[apiName] = cachedApiCallbackTable[apiName] || {};
-
-	cachedApiCallbackTable[apiName][uuid] = {
-		success: success,
-		error: error
-	};
-
-	apiTransfer.send({
-		api: apiName,
-		data: data,
-		timespan: uuid,
-		// 标记postMessage使用object，47.9 增加
-		useObject: true
-	});
-}
 
 function getCurrentServiceSession(){
 	return new Promise(function(resolve, reject){
@@ -88,9 +38,8 @@ function getToken(){
 		}
 		else{
 			emajax({
-				url: location.protocol + "//" + config.restServer + "/" + config.orgName +
+				url: "https://" + config.restServer + "/" + config.orgName +
 					"/" + config.appName + "/token",
-				useXDomainRequestInIE: true,
 				dataType: "json",
 				data: {
 					grant_type: "password",
@@ -99,7 +48,8 @@ function getToken(){
 				},
 				type: "POST",
 				success: function(resp){
-					var token = resp.access_token;
+          var data = resp.data;
+					var token = data.access_token;
 
 					// cache token
 					config.user.token = token;
@@ -1156,14 +1106,6 @@ module.exports = {
 	getWechatProfile: getWechatProfile,
 	createWechatImUser: createWechatImUser,
 
-	initApiTransfer: initApiTransfer,
-	api: api,
-	setCacheItem: function(key, value){
-		cache[key] = value;
-	},
-	clearCacheItem: function(key){
-		cache[key] = null;
-	},
 	init: function(cfg){
 		config = cfg;
 	}

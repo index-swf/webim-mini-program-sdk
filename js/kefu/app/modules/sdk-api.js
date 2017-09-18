@@ -6,7 +6,7 @@ var profile = require("./tools/profile");
 var _const = require("../../common/const");
 var utils = require("../../common/utils");
 
-var KefuWebIM = window.KefuWebIM = {
+var KefuWebIM = {
 	init: init,
 	sdkConst: sdkConst,
 	version: "0.1.0",

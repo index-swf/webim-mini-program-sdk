@@ -4,6 +4,7 @@ var apiHelper = require("./apiHelper");
 var eventListener = require("./tools/eventListener");
 var channel = require("./channel");
 var profile = require("./tools/profile");
+var _ = require("../lib/underscore");
 
 var initAgentStatusPoller = require("./chat/initAgentStatusPoller");
 var initSessionList = require("./chat/initSessionList");
