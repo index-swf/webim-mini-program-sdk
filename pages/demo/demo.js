@@ -136,6 +136,17 @@ Page({
 
     sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.TRANSFER_TO_MANUAL);
   },
+  sendImage: function() {
+    if (!sessionHandler) {
+      throw new Error("kefu-webim-sdk must be initialized first.");
+    }
+
+    sessionHandler.sendMessage({ type: KefuWebIM.sdkConst.MESSAGE_TYPE.IMAGE}).then(function () {
+      console.log("the image message was sent successfully.");
+    }, function () {
+      console.error("the message failed to send.");
+    });
+  },
   sendTextMessage: function () {
     var message;
 

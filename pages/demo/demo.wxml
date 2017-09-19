@@ -3,6 +3,7 @@
 	<button hover-class="btn_hover" bindtap="initSdk">初始化sdk</button>
 	<button hover-class="btn_hover" bindtap="createTicket">发送留言</button>
 	<button hover-class="btn_hover" bindtap="transferToManual">转人工</button>
+	<button hover-class="btn_hover" bindtap="sendImage">发送图片消息</button>
 
 	<input type="text" placeholder="请输入消息内容" bindinput="bindInputTextMessage"/>
 	<button hover-class="btn_hover" bindtap="sendTextMessage">发送文本消息</button>

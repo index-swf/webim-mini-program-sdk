@@ -82,6 +82,7 @@ module.exports = {
 	},
 	handleMessage: _handleMessage,
 	sendMessage: _sendMessage,
+  sendImageWechat: sendImageWechat,
 };
 
 function _addSessionEventListener(){
@@ -140,7 +141,7 @@ function _sendMessage(type, content, callbacks){
 		_sendFile(_createFileObject(content), callbacks);
 		break;
 	case sdkConst.MESSAGE_TYPE.IMAGE:
-		_sendImg(_createFileObject(content), callbacks);
+      _sendImageFileWechat().then(callbacks.success, callbacks.failure);
 		break;
 	default:
 		throw new Error("unexpected message type: " + type);
@@ -916,5 +917,119 @@ function _detectUploadImgMsgByApi(id, file){
 			// _uploadImgMsgChannle(id, file);
 		}, _const.FIRST_CHANNEL_IMG_MESSAGE_TIMEOUT)
 	);
+}
+
+function _chooseImageWechat() {
+  return new Promise(function (resolve, reject) {
+    wx.chooseImage({
+      count: 1,
+      success: function _chooseImageSuccessCallback(res) {
+        var filePath = res.tempFilePaths[0];
+
+        resolve(filePath);
+      },
+      fail: reject,
+    });
+  });
+}
+
+function _getImageInfoWechat(filePath) {
+  return new Promise(function (resolve, reject) {
+    wx.getImageInfo({
+      src: filePath,
+      success: function (res) {
+        var width = res.width;
+        var height = res.height;
+        var path = res.path;
+        var lastIndexOfDot = res.path.lastIndexOf(".");
+        var fileType = lastIndexOfDot !== -1 ? path.slice(lastIndexOfDot + 1) : null;
+        var fileInfo = {
+          width: width,
+          height: height,
+          fileType: fileType,
+          path: path,
+        };
+
+        resolve(fileInfo);
+      },
+      fail: reject,
+    });
+  });
+}
+
+function _uploadFileWechat(fileInfo) {
+  return new Promise(function (resolve, reject) {
+    var filePath = fileInfo.path;
+    var orgName = "easemob-131268";
+    var appName = "testappid123457890";
+
+    wx.uploadFile({
+      url: "https://a1.easemob.com/" + orgName + "/" + appName + "/chatfiles",
+      filePath: filePath,
+      name: "file",
+      header: {
+        "Content-Type": "multipart/form-data"
+      },
+      success: function (res) {
+        var parsedData = JSON.parse(res.data);
+        var uuid = parsedData.entities[0].uuid;
+        var url = parsedData.uri + "/" + uuid;
+        var dataObj = {
+          size: {
+            width: fileInfo.width,
+            height: fileInfo.height,
+          },
+          url: url,
+          filePath: fileInfo.path,
+          fileType: fileInfo.fileType,
+        };
+
+        resolve(dataObj);
+      },
+      fail: reject,
+    });
+  });
+}
+
+function _sendFile(dataObj) {
+  return new Promise(function (resolve, reject) {
+    var toUser = "cyy2016";
+    var id = utils.uuid();
+    var msg = new WebIM.message.img(id);
+
+    msg.set({
+      apiUrl: WebIM.config.apiURL,
+      body: {
+        type: "img",
+        size: dataObj.size,
+        url: dataObj.url,
+        filetype: dataObj.filetype,
+        filename: dataObj.filePath
+      },
+      to: toUser,
+      success: resolve,
+      fail: reject,
+    });
+    conn.send(msg.body);
+  });
+}
+
+function sendImageWechat(){
+  return _chooseImageWechat()
+    .then(function (filePath) {
+      return _getImageInfoWechat(filePath);
+    })
+    .then(function (fileInfo) {
+      return _uploadFileWechat(fileInfo);
+    })
+    .then(function (dataObj) {
+      return _sendFile(dataObj);
+    })
+    .then(function (id) {
+      console.log("send image successfully.", id);
+    })
+  ["catch"](function (err) {
+    console.log("failed to send image.", err);
+  });
 }
 
