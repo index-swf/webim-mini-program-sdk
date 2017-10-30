@@ -23,7 +23,7 @@ function getHistoryMessage(count){
 	return new Promise(function(resolve, reject){
 		var officialAccountId = profile.systemOfficialAccount.official_account_id;
 		var noMoreHistoryMessage = profile.systemOfficialAccount.noMoreHistoryMessage || false;
-		var currHistoryMsgSeqId = profile.sygtemOfficialAccount.currHistoryMsgSeqId || 0;
+		var currHistoryMsgSeqId = profile.systemOfficialAccount.currHistoryMsgSeqId || 0;
 
 		if(!officialAccountId){
 			throw new Error("no session initialized.");
@@ -42,7 +42,7 @@ function getHistoryMessage(count){
 			var earliestMsg = msgList[length - 1] || {};
 			var nextMsgSeq = earliestMsg.id;
 
-			profile.sygtemOfficialAccount.currHistoryMsgSeqId = nextMsgSeq;
+			profile.systemOfficialAccount.currHistoryMsgSeqId = nextMsgSeq;
 			profile.systemOfficialAccount.noMoreHistoryMessage = length < size || nextMsgSeq <= 0;
 			resolve(msgList);
 		}, function(err){

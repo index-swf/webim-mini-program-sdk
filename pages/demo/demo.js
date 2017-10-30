@@ -176,4 +176,13 @@ Page({
 
     sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.CALL_ROBOT_MENU, menuId);
   },
+  getHistoryMessage: function(){
+    if (!sessionHandler) {
+      throw new Error("kefu-webim-sdk must be initialized first.");
+    }
+
+    sessionHandler.getHistoryMessage(10).then(function(messageList){
+      console.log(messageList);
+    });
+  },
 });
