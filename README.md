@@ -19,3 +19,8 @@
 	- `kefucross.easemob.com` 用于跨域请求的代理服务
 	- `a1.easemob.com` restServer，按照实际情况填写，可能会因所在集群而不同
 	- `im-api.easemob.com` xmppServer，按照实际情况填写，可能会因所在集群而不同
+
+- 关于收发表情
+  - 由于涉及 UI 渲染，在 sdk 层无法提供
+  - 收到消息时请根据 KefuWebIM.sdkConst.EMOJI_MAP 这个映射自行解析
+  - 发送时直接发送字符即可，例如：`[):]` 代表笑脸
