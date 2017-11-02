@@ -5,6 +5,8 @@ var Dict = require("./tools/Dict");
 var List = require("./tools/List");
 var profile = require("./tools/profile");
 var tools = require("./tools/tools");
+var callbackManager = require("./tools/callbackManager");
+
 var eventListener = require("./tools/eventListener");
 var apiHelper = require("./apiHelper");
 var moment = require("../lib/moment");
@@ -201,6 +203,16 @@ function _initConnection(onReadyCallback){
 		onCmdMessage: function(message){
 			_handleMessage(message, "cmd");
 		},
+    onReceivedMessage: function(messageElement){
+      // 垃圾 im-sdk，消息ID还要自己解析
+      var received = messageElement.getElementsByTagName("received");
+      var messageId = utils.getDataByPath(received, "0.childNodes.0.nodeValue")
+        || utils.getDataByPath(received, "0.innerHTML")
+        || utils.getDataByPath(received, "0.innerText")
+        || null;
+
+      callbackManager.remove(messageId)
+    },
 		onOnline: function(){
 			utils.isMobile && _open();
 		},
@@ -252,9 +264,12 @@ function _sendText(message, ext, callbacks){
 		msg: message,
 		to: config.toUser,
 		// 此回调用于确认im server收到消息, 有别于kefu ack
+    // 垃圾im-sdk 这个回调是坏的
 		success: callbacks.success,
 		fail: callbacks.failure,
 	});
+
+  callbackManager.add(id, callbacks);
 
 	if(ext){
 		_.extend(msg.body, ext);
@@ -316,6 +331,7 @@ function _sendImg(fileMsg, callbacks){
 		onFileUploadComplete: function(){},
 		fail: callbacks.failure,
 	});
+  callbackManager.add(id, callbacks);
 	_setExt(msg);
 	_appendAck(msg, id);
 	_appendMsg({
@@ -346,6 +362,7 @@ function _sendFile(fileMsg, callbacks){
 		success: callbacks.success,
 		fail: callbacks.failure,
 	});
+  callbackManager.add(id, callbacks);
 	_setExt(msg);
 	_appendMsg({
 		id: id,
@@ -861,7 +878,7 @@ function _sendMsgChannle(id, retryCount){
 			_sendMsgChannle(id, --count);
 		}
 		else{
-			_showFailed(id);
+			// _showFailed(id);
 		}
 	});
 }
@@ -993,7 +1010,6 @@ function _uploadFileWechat(fileInfo) {
 
 function _sendFile(dataObj) {
   return new Promise(function (resolve, reject) {
-    var toUser = "cyy2016";
     var id = utils.uuid();
     var msg = new WebIM.message.img(id);
 
@@ -1006,10 +1022,14 @@ function _sendFile(dataObj) {
         filetype: dataObj.filetype,
         filename: dataObj.filePath
       },
-      to: toUser,
+      to: config.toUser,
+      // 垃圾 im-sdk，回调是坏的
       success: resolve,
       fail: reject,
     });
+
+    // 图片超时为 10s
+    callbackManager.add(id, { success: resolve, failure: reject }, 10000)
     conn.send(msg.body);
   });
 }

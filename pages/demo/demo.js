@@ -141,10 +141,10 @@ Page({
       throw new Error("kefu-webim-sdk must be initialized first.");
     }
 
-    sessionHandler.sendMessage({ type: KefuWebIM.sdkConst.MESSAGE_TYPE.IMAGE}).then(function () {
-      console.log("the image message was sent successfully.");
-    }, function () {
-      console.error("the message failed to send.");
+    sessionHandler.sendMessage({ type: KefuWebIM.sdkConst.MESSAGE_TYPE.IMAGE }).then(function (messageId) {
+      console.log("the image message was sent successfully.", messageId);
+    }, function (error) {
+      console.error("the message failed to send.", error);
     });
   },
   sendTextMessage: function () {
@@ -159,10 +159,10 @@ Page({
       content: textMessage,
     };
 
-    sessionHandler.sendMessage(message).then(function () {
-      console.log("the text message was sent successfully.");
-    }, function () {
-      console.error("the message failed to send.");
+    sessionHandler.sendMessage(message).then(function (messageId) {
+      console.log("the text message was sent successfully.", messageId);
+    }, function (error) {
+      console.error("the message failed to send.", error);
     });
   },
   callMenu: function () {
