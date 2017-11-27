@@ -87,6 +87,7 @@ function _onReady(){
 
 	profile.isMessageChannelReady = true;
 
+  (profile.sdkCallbacks.onReady || function(){})();
 	// 发送扩展消息
 	while(!_.isEmpty(profile.commandMessageToBeSendList.length)){
 		channel.sendText("", profile.commandMessageToBeSendList.pop());

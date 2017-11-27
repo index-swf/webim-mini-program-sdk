@@ -111,6 +111,12 @@ Page({
 
           console.log("command received: ", command, data);
         },
+        onError: function(){
+          console.error("failed to init sdk.", err);
+        },
+        onReady: function(){
+          console.log("sdk initialized.");
+        },
       });
   },
   createTicket: function () {

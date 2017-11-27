@@ -28,7 +28,6 @@ KefuWebIM.init = function(option){};
  * @property {function} onAgentUserChange - 设置坐席改变回调
  * @property {function} onAgentStatusChange - 设置坐席状态改变回调
  * @property {function} onError - 设置出错回调
- * @property {function} complete - 完成初始化
  */
 ```
 
