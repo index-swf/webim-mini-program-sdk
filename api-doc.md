@@ -47,9 +47,6 @@ kefuWebImHandler.onReady = function(onReadyCallback){};
  * @callback onReadCallback
  * @param {object} info - 当前连接
  * @param {string} info.visitorImUsername - 访客IM账号
- * @param {string} info.enterpriseWelcome - 企业欢迎语
- * @param {string} info.skillGroupWelcome - 技能组欢迎语
- * @param {string|Object} info.robotWelcome - 机器人欢迎语
  */
 ```
 

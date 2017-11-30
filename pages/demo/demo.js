@@ -26,7 +26,7 @@ Page({
     sessionHandler = KefuWebIM.init({
       // 初始化配置
       tenantId: "22961",
-      imUsername: "webim-visitor-X27E2MY3B3XG3YKBXG3W",
+      // imUsername: "webim-visitor-X27E2MY3B3XG3YKBXG3W",
       // imPassword: "B9HE7CJFH8",
     }, {
         // 指定callback
@@ -114,8 +114,9 @@ Page({
         onError: function(){
           console.error("failed to init sdk.", err);
         },
-        onReady: function(){
+        onReady: function(info){
           console.log("sdk initialized.");
+          console.log("im username: ", info.visitorImUsername);
         },
       });
   },
@@ -189,6 +190,8 @@ Page({
 
     sessionHandler.getHistoryMessage(10).then(function(messageList){
       console.log(messageList);
+    }, function(error){
+      console.log("no more history message.");
     });
   },
 });

@@ -87,7 +87,9 @@ function _onReady(){
 
 	profile.isMessageChannelReady = true;
 
-  (profile.sdkCallbacks.onReady || function(){})();
+  (profile.sdkCallbacks.onReady || function(){})({
+    visitorImUsername: config.user.username,
+  });
 	// 发送扩展消息
 	while(!_.isEmpty(profile.commandMessageToBeSendList.length)){
 		channel.sendText("", profile.commandMessageToBeSendList.pop());
