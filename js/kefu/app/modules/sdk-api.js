@@ -93,10 +93,8 @@ function sendMessage(message){
       // todo: file
       break;
 		case sdkConst.MESSAGE_TYPE.IMAGE:
-			return channel.sendImageWechat();
-			// if(fileSize > _const.UPLOAD_FILESIZE_LIMIT){
-			// 	throw new Error("The file size cannot exceed 10 MB.");
-			// }
+      channel.sendImageWechat(resolve, reject);
+      return;
 		default:
 			throw new Error("unexpected message type: " + type);
 		}

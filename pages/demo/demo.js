@@ -148,8 +148,8 @@ Page({
       throw new Error("kefu-webim-sdk must be initialized first.");
     }
 
-    sessionHandler.sendMessage({ type: KefuWebIM.sdkConst.MESSAGE_TYPE.IMAGE }).then(function (messageId) {
-      console.log("the image message was sent successfully.", messageId);
+    sessionHandler.sendMessage({ type: KefuWebIM.sdkConst.MESSAGE_TYPE.IMAGE }).then(function (fileInfo) {
+      console.log("the image message was sent successfully.", fileInfo);
     }, function (error) {
       console.error("the message failed to send.", error);
     });

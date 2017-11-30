@@ -1034,22 +1034,26 @@ function _sendFile(dataObj) {
   });
 }
 
-function sendImageWechat(){
-  return _chooseImageWechat()
+function sendImageWechat(resolve, reject){
+  var cachedFileInfo;
+
+  _chooseImageWechat()
     .then(function (filePath) {
       return _getImageInfoWechat(filePath);
     })
     .then(function (fileInfo) {
+      cachedFileInfo = fileInfo;
       return _uploadFileWechat(fileInfo);
     })
     .then(function (dataObj) {
       return _sendFile(dataObj);
     })
     .then(function (id) {
-      console.log("send image successfully.", id);
+      cachedFileInfo.id = id;
+      resolve(cachedFileInfo);
     })
   ["catch"](function (err) {
-    console.log("failed to send image.", err);
+    reject(err);
   });
 }
 
