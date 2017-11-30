@@ -20,6 +20,8 @@ var _reCreateImUser = _.once(function(){
 		config.user.username = entity.userId;
 		config.user.password = entity.userPassword;
 
+		wx.setStorageSync("easemob-kefu-webim-username", entity.userId);
+
 		_initSession();
 	});
 });

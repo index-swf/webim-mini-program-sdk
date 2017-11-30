@@ -14,6 +14,7 @@ var hasChatEntryInitialized;
 function _init(option, callbacks){
 	var OPTION_KEY_ARRAY = "tenantId|configId|appKey|to|apiServer|restServer|xmppServer|agentUsername|skillGroup|imUsername|imPassword|language".split("|");
 	var CALLBACK_KEY_ARRAY = "onReady|onMessageReceived|onCommandReceived|onAgentStatusChange|onError".split("|");
+	var cachedUsername = wx.getStorageSync("easemob-kefu-webim-username");	
 	// check option keys
 	var unknownOptionKeys = _.chain(option)
 	.map(function(value, key){
@@ -52,7 +53,7 @@ function _init(option, callbacks){
 		emgroup: option.skillGroup || "",
 		language: option.language || "zh-CN",
 		user: {
-			username: option.imUsername || "",
+			username: option.imUsername || cachedUsername || "",
 			password: option.imPassword || "",
 		},
 	};
@@ -239,6 +240,8 @@ function _downgrade(){
 	apiHelper.createVisitor().then(function(entity){
 		config.user.username = entity.userId;
 		config.user.password = entity.userPassword;
+
+		wx.setStorageSync("easemob-kefu-webim-username", entity.userId);
 
 		chat.init();
 	});
