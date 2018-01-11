@@ -41,7 +41,7 @@ function _getGreetings(officialAccount){
 			break;
 		case 1:
 			// 菜单消息
-			greetingObj = JSON.parse(greetingText.replace(/&amp;quot;/g, "\""));
+			greetingObj = JSON.parse(greetingText.replace(/&(amp;)+quot;/g, "\""));
 
 			greetingObj.ext && channel.handleMessage({
 				ext: greetingObj.ext,
