@@ -11,4 +11,17 @@
 
 	<input type="text" placeholder="请输入菜单ID" bindinput="bindInputMenuId"/>
 	<button hover-class="btn_hover" bindtap="callMenu">调用菜单</button>
+
+  <view>
+  <text>请对我的服务进行评价！</text>
+  <button hover-class="btn_hover" bindtap="callEvaluate">{{ text }}</button>
+  <block wx:if="{{show}}">
+    <text>score</text>
+    <input type="text" placeholder="请输入评分" bindinput="bindInputScoreMessage"/>
+    <text>content</text>
+    <input type="text" placeholder="请输入评价内容" bindinput="bindInputContentMessage"/>
+
+    <button hover-class="btn_hover" bindtap="doEvaluate">提交评价</button>
+  </block>
+</view>
 </view>
