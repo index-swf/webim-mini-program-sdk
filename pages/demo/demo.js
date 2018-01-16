@@ -2,11 +2,16 @@ var KefuWebIM = require('../../js/kefu/app/modules/sdk-api.js');
 
 var textMessage;
 var menuId;
+var scoreMessage;
+var contentMessage;
 
 var sessionHandler;
 
 Page({
-  data: {},
+  data: {
+    show:false,
+    text:"去评价"
+  },
   bindInputTextMessage: function (e) {
     textMessage = e.detail.value;
   },
@@ -57,13 +62,10 @@ Page({
             case KefuWebIM.sdkConst.MESSAGE_TYPE.ARTICLE:
               // 图文消息
               break;
-            case KefuWebIM.sdkConst.MESSAGE_TYPE.EVALUATE_REQUEST:
-              // 邀请评价客服消息
-              break;
             case KefuWebIM.sdkConst.MESSAGE_TYPE.WAIT_TIMEOUT:
               // 待接入超时提醒消息，未设置的没有此种类型
               break;
-            case KefuWebIM.sdkConst.COMMAND_MESSAGE.EVALUATE_REQUEST:
+            case KefuWebIM.sdkConst.MESSAGE_TYPE.EVALUATE_REQUEST:
               // 收到评价客服坐席邀请
               // 需要在用户评价完成后调用 sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.EVALUATE_AGENT, option) 来提交评价数据
               console.log("inviteId: ", content.inviteId, "sessionId: ", content.sessionId);
@@ -74,6 +76,10 @@ Page({
                 content: "非常满意",
                 // 五星好评
                 level: 5,
+              }).then(function () {
+                console.log("success")
+              }, function (error) {
+                console.log("fail", error)
               });
               break;
             case KefuWebIM.sdkConst.MESSAGE_TYPE.TEXT_EXT:
@@ -194,4 +200,40 @@ Page({
       console.log("no more history message.");
     });
   },
+  callEvaluate: function () {
+    this.setData({
+      show: !this.data.show
+    })
+    if (this.data.show){
+      this.setData({
+        text: "收起"
+      })
+    }else{
+      this.setData({
+        text: "去评价"
+      })
+    }
+  },
+  bindInputScoreMessage: function (e) {
+    scoreMessage = e.detail.value;
+  },
+  bindInputContentMessage: function (e) {
+    contentMessage = e.detail.value;
+  },
+  doEvaluate: function () {
+    if (!sessionHandler) {
+      throw new Error("kefu-webim-sdk must be initialized first.");
+    }
+
+    sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.EVALUATE_AGENT, {
+      level: scoreMessage,				// 评分
+      content: contentMessage,		// 评论内容
+      // inviteId: "828b25f4-56eb-4d31-a222-535f8ec2c3c5",	// 可选
+      // sessionId: "0833a909-d1fe-4d0e-b5fe-d743a402be3d",	// 可选
+    }).then(function (res) {
+      console.log("the evaluate was created successfully.",res)
+    }, function (error) {
+      console.log("the evaluate was failed to send.",error)
+    });
+  }
 });

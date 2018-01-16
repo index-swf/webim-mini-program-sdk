@@ -44,6 +44,11 @@ function getHistoryMessage(count){
 
 			profile.systemOfficialAccount.currHistoryMsgSeqId = nextMsgSeq;
 			profile.systemOfficialAccount.noMoreHistoryMessage = length < size || nextMsgSeq <= 0;
+      for(var i = 0;i<msgList.length;i++){
+        if (msgList[i].body.bodies[0].type == "txt"){
+          msgList[i].body.bodies[0].msg = msgList[i].body.bodies[0].msg.replace(/&amp; /g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, "\"").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+        } 
+      }
 			resolve(msgList);
 		}, function(err){
 			reject(err);
