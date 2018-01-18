@@ -5,6 +5,7 @@ var apiHelper = require("./apiHelper");
 var profile = require("./tools/profile");
 var _const = require("../../common/const");
 var utils = require("../../common/utils");
+var _ = require("../lib/underscore");
 
 var KefuWebIM = {
 	init: init,
@@ -41,14 +42,21 @@ function getHistoryMessage(count){
 			var length = msgList.length;
 			var earliestMsg = msgList[length - 1] || {};
 			var nextMsgSeq = earliestMsg.id;
+      var type, msg;
 
 			profile.systemOfficialAccount.currHistoryMsgSeqId = nextMsgSeq;
 			profile.systemOfficialAccount.noMoreHistoryMessage = length < size || nextMsgSeq <= 0;
-      for(var i = 0;i<msgList.length;i++){
-        if (msgList[i].body.bodies[0].type == "txt"){
-          msgList[i].body.bodies[0].msg = msgList[i].body.bodies[0].msg.replace(/&amp; /g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, "\"").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+      _.each(msgList, function(ele){
+        type = utils.getDataByPath(ele, "body.bodies.0.type");
+        if (type === "txt") {
+          msg = utils.getDataByPath(ele, "body.bodies.0.msg");
+          ele.body.bodies[0].msg = msg.replace(/&amp;/g, "&")
+            .replace(/&#39;/g, "'")
+            .replace(/&quot;/g, "\"")
+            .replace(/&lt;/g, "<")
+            .replace(/&gt;/g, ">");
         } 
-      }
+      });
 			resolve(msgList);
 		}, function(err){
 			reject(err);
