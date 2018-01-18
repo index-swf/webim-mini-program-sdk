@@ -186,7 +186,6 @@ Page({
     if (!sessionHandler) {
       throw new Error("kefu-webim-sdk must be initialized first.");
     }
-
     sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.CALL_ROBOT_MENU, menuId);
   },
   getHistoryMessage: function(){
@@ -223,8 +222,7 @@ Page({
   doEvaluate: function () {
     if (!sessionHandler) {
       throw new Error("kefu-webim-sdk must be initialized first.");
-    }
-
+    };
     sessionHandler.callFeature(KefuWebIM.sdkConst.FEATURE.EVALUATE_AGENT, {
       level: scoreMessage,				// 评分
       content: contentMessage,		// 评论内容
