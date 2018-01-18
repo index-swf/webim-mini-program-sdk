@@ -166,6 +166,8 @@ function _evaluateAgent(params){
 	var sessionId = option.sessionId || profile.currentOfficialAccount.sessionId || "";
 	var content = option.content;
 	var level = option.level;
+  var appraiseTags = option.appraiseTags || [];
+  var evaluationDegreeId = option.evaluationDegreeId || "";
 
 	return new Promise(function(resolve, reject){
 		var callbacks = {
@@ -175,18 +177,22 @@ function _evaluateAgent(params){
 
 		channel.sendMessage(sdkConst.MESSAGE_TYPE.TEXT_EXT, {
 			txt: "",
-			ext: {
-				weichat: {
-					ctrlType: "enquiry",
-					ctrlArgs: {
-						// 后端类型要求，inviteId必须传数字
-						inviteId: inviteId,
-						serviceSessionId: sessionId,
-						detail: content,
-						summary: level,
-					}
-				}
-			},
+      ext: {
+			  ext: {
+				  weichat: {
+					  ctrlType: "enquiry",
+					  ctrlArgs: {
+						  // 后端类型要求，inviteId必须传数字
+						  inviteId: inviteId,
+						  serviceSessionId: sessionId,
+						  detail: content,
+						  summary: level,
+              appraiseTags: appraiseTags,
+              evaluationDegreeId: evaluationDegreeId
+					  }
+				  }
+			  },
+      },
 		}, callbacks);
 	});
 }
